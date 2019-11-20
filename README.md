@@ -15,7 +15,7 @@ docker containers so it should work on most platforms that support docker.
 
 Use the terminal and go to the root folder of this repo and run
 
-'''./run.sh```
+```./run.sh```
 
 This will launch a mysql container, wait for it to be ready and run several benchmarks. 
 Results are printed to the console. Once finished it will stop all containers.
