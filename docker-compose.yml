@@ -1,20 +1,24 @@
 version: '3.3'
 
 services:
-  scripts:
+  scripts_mysql:
     build: .
     depends_on:
       - mysql
       - start_dependencies
     links:
       - mysql:db
-  start_dependencies:
-    image: dadarek/wait-for-dependencies
+    environment:
+      - ENGINE=MySQL
+  scripts_mariadb:
+    build: .
     depends_on:
-      - mysql
+      - mariadb
+      - start_dependencies
     links:
-      - mysql:db
-    command: mysql:3306
+      - mariadb:db
+    environment:
+      - ENGINE=MariaDB
   mysql:
     image: mysql:5.7
     restart: always
@@ -26,3 +30,20 @@ services:
     volumes:
       - ./db:/data/application/
     command: --init-file /data/application/init.sql
+  mariadb:
+    image: mariadb:10.4
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    volumes:
+      - ./db:/data/application/
+    command: --init-file /data/application/init.sql
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - mysql
+      - mariadb
+    command: mysql:3306 mariadb:3306

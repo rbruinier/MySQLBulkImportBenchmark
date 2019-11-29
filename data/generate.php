@@ -22,7 +22,9 @@ function randomString($minLength = 3, $maxLength = 20) {
     return $result;
 }
 
-echo "Generating $numberOfPeople person records; might take a bit\n";
+$engine = getenv('ENGINE');
+
+echo "$engine: Generating $numberOfPeople person records; might take a bit\n";
 
 $file = fopen($filename, 'w');
 
@@ -44,4 +46,4 @@ for ($id = 1; $id <= $numberOfPeople; $id += 1) {
 
 fclose($file);
 
-echo "Finished generating person records\n";
+echo "$engine: Finished generating person records\n";

@@ -20,13 +20,15 @@ class BenchmarkRunner {
     }
 
     public function run(array $benchmarks, string $filename) {
+        $engine = getenv('ENGINE');
+
         $totalNumberOfRecords = $this->getNumberOfLinesInFile($filename);
 
         /** @var $benchmark Benchmark */
         foreach ($benchmarks as $benchmark) {
             $identifier = $benchmark->identifier();
 
-            echo "Running benchmarks for '$identifier'\n";
+            echo "$engine: Running benchmarks for '$identifier'\n";
 
             $durations = $this->runPostIndicesBenchmark($benchmark, $totalNumberOfRecords);
 
@@ -37,17 +39,17 @@ class BenchmarkRunner {
             $indicesDuration = round($durations['indices'] * $multiplier, 2);
 
             if ($multiplier == 1) {
-                echo "$identifier with indices added after import took $totalDuration seconds (import: $insertDuration; indices: $indicesDuration)\n";
+                echo "$engine: $identifier with indices added after import took $totalDuration seconds (import: $insertDuration; indices: $indicesDuration)\n";
             } else {
-                echo "$identifier with indices added after import took $totalDuration seconds (import: $insertDuration; indices: $indicesDuration) (extrapolated intervals)\n";
+                echo "$engine: $identifier with indices added after import took $totalDuration seconds (import: $insertDuration; indices: $indicesDuration) (extrapolated intervals)\n";
             }
 
             $duration = round($this->runPreIndicesBenchmark($benchmark, $totalNumberOfRecords) * $multiplier, 2);
 
             if ($multiplier == 1) {
-                echo "$identifier with indices already in place took $duration seconds\n";
+                echo "$engine: $identifier with indices already in place took $duration seconds\n";
             } else {
-                echo "$identifier with indices already in place took $duration seconds (extrapolated intervals)\n";
+                echo "$engine: $identifier with indices already in place took $duration seconds (extrapolated intervals)\n";
             }
         }
     }
